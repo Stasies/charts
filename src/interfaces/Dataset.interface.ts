@@ -10,6 +10,12 @@ export interface Axes {
     grid?: boolean;
     strokeStyle?: string;
     dash?: number[];
+    labels: {
+      fillStyle?: string;
+      font: string;
+      textAlign: string;
+      textBaseline: string;
+    };
   };
 }
 export interface Config {

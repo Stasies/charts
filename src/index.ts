@@ -25,9 +25,15 @@ const config = {
       lineWidth: 2,
       strokeStyle: "#ccc",
       dash: [5, 5],
+      labels: {
+        fillStyle: "pink",
+        font: "18px sans-serif",
+        textAlign: "center",
+        textBaseline: "middle",
+      },
     },
     x: {
-      strokeStyle: "red",
+      strokeStyle: "lightgrey",
     },
   },
 };

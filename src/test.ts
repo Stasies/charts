@@ -78,7 +78,7 @@ export class Chart extends HTMLElement {
 
     return rounded * magnitude;
   }
-  drawGrid(stepX: number, stepY: number, originX: number) {
+  drawGrid(stepX: number, stepY: number, originX: number, originY: number) {
     this.ctx.clearRect(0, 0, this.width, this.height);
 
     // Draw vertical grid lines
@@ -87,7 +87,9 @@ export class Chart extends HTMLElement {
       this.ctx.lineWidth = this.axes?.x?.lineWidth || 1;
       this.ctx.setLineDash(this.axes?.x?.dash || []);
       for (let x = this.offset; x <= this.width + this.offset; x += stepX) {
-        this.drawLine(x, this.height, x, 0);
+        if (x !== originX) {
+          this.drawLine(x, this.height, x, 0);
+        }
       }
       this.ctx.setLineDash([]);
     }
@@ -98,14 +100,17 @@ export class Chart extends HTMLElement {
       this.ctx.lineWidth = this.axes?.y?.lineWidth || 1;
       this.ctx.setLineDash(this.axes?.y?.dash || []);
       for (let y = this.height; y > 0; y -= stepY) {
-        this.drawLine(this.offset, y, this.width + originX, y);
+        console.log(y, originY);
+        if (Math.ceil(y) !== Math.ceil(originY)) {
+          this.drawLine(this.offset, y, this.width + originX, y);
+        }
       }
       this.ctx.setLineDash([]);
     }
   }
   drawAxes(x: number, y: number) {
-    this.ctx.strokeStyle = "grey";
-    this.ctx.lineWidth = 2;
+    this.ctx.strokeStyle = "#ccc";
+    this.ctx.lineWidth = 1;
 
     // X-axis
     this.drawLine(this.offset, y, this.width + this.offset, y);
@@ -119,10 +124,10 @@ export class Chart extends HTMLElement {
     step: number,
     axis: string
   ) {
-    this.ctx.fillStyle = "grey";
-    this.ctx.font = "14px";
-    this.ctx.textAlign = "center";
-    this.ctx.textBaseline = "middle";
+    this.ctx.fillStyle = this.axes[axis].labels?.fillStyle || "#ccc";
+    this.ctx.font = this.axes[axis].labels?.font || "14px Arial";
+    // this.ctx.textAlign = this.axes[axis].labels?.textAlign || "center";
+    // this.ctx.textBaseline = this.axes[axis].labels?.fillStyle || "middle";
 
     for (let item of labels) {
       if (axis == "y") {
@@ -188,7 +193,7 @@ class VerticalChart extends Chart {
     this.originY = this.height - negativeSpace;
   }
   drawGrid() {
-    super.drawGrid(this.stepX, this.stepY, this.originX);
+    super.drawGrid(this.stepX, this.stepY, this.originX, this.originY);
   }
   drawAxes() {
     super.drawAxes(this.originX, this.originY);
@@ -315,7 +320,7 @@ class HorizontalChart extends Chart {
     this.originX = negativeSpace + this.offset;
   }
   drawGrid() {
-    super.drawGrid(this.stepX, this.stepY, this.originX);
+    super.drawGrid(this.stepX, this.stepY, this.originX, this.originY);
   }
   drawAxes() {
     super.drawAxes(this.originX, this.originY);
