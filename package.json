@@ -1,0 +1,36 @@
+{
+  "name": "@stasies/text-editor",
+  "version": "1.1.22",
+  "description": "A text editor",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/carousel.umd.js",
+  "module": "dist/carousel.es.js",
+  "type": "module",
+  "types": "dist/carousel.d.ts",
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "test": "vitest --watch",
+    "test:e2e": "playwright test --workers 6",
+    "test:ui": "vitest --ui",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@open-wc/testing": "^4.0.0",
+    "@playwright/test": "^1.50.1",
+    "lit": "^3.2.1",
+    "ts-node": "^10.9.2",
+    "vite": "^6.1.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "happy-dom": "^17.1.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  },
+  "author": "Anastasia Vyatkina",
+  "license": "MIT"
+}
