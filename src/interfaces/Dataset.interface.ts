@@ -11,14 +11,17 @@ export interface Axes {
     strokeStyle?: string;
     dash?: number[];
     labels: {
-      fillStyle?: string;
-      font: string;
-      textAlign: string;
-      textBaseline: string;
-    };
+      [key: string]: string
+    },
   };
 }
+
 export interface Config {
   dataset: DatasetItem[];
   axes?: Axes;
+  barThickness: number,
+  borderRadius: number,
+  dataLabels: {
+    [key: string]: string | boolean | number
+  }
 }
