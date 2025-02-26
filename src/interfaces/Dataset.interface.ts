@@ -2,6 +2,7 @@ export interface DatasetItem {
   color: string[];
   dash?: number[];
   pointRadius?: number;
+  label?: string;
   data: { [key: string]: number };
 }
 export interface Axes {
@@ -21,7 +22,9 @@ export interface Config {
   axes?: Axes;
   barThickness: number,
   borderRadius: number,
-  dataLabels: {
-    [key: string]: string | boolean | number
+  dataLabels?: {
+    display?: boolean,
+    fillStyle?: string,
+    position?: string
   }
 }
