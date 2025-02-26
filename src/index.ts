@@ -1,4 +1,3 @@
-import { offset } from "./gridData";
 import type { DatasetItem } from "./interfaces/Dataset.interface";
 
 let canvas = document.querySelector("#coordinateCanvas") as any;
@@ -21,14 +20,17 @@ const dataset: DatasetItem[] = [
 ];
 const bibliostatIBO: DatasetItem[] = [
   {
+    label: 'По почте',
     color: ["#FDCF69"],
     data: { 'Адресные': -25, "Тематические": 30, "Уточняющие": 12, "Фактографические": 39, "Краеведческие": 30, "Социально-правовые и вообще много слов": 40 },
   },
   {
+    label: 'В сети',
     color: ["#E18141"],
     data: { 'Адресные': 15, "Тематические": 6, "Уточняющие": 35, "Фактографические": 46, "Краеведческие": 30, "Социально-правовые и вообще много слов": 50 },
   },
   {
+    label: 'По телефону',
     color: ["#59BBA6"],
     data: { 'Адресные': 65, "Тематические": 26, "Уточняющие": 45, "Фактографические": 16, "Краеведческие": 30, "Социально-правовые и вообще много слов": 60 },
   },
@@ -57,9 +59,13 @@ const iboConfig = {
   dataset: bibliostatIBO,
   barThickness: 6,
   borderRadius: 4,
+  dataLabels: {
+    display: true,
+    fillStyle: 'white',
+    position: 'end top'
+  },
   axes: {
     y: {
-      grid: false,
       labels: {
         fillStyle: "#7D8187",
         font: "12px sans-serif",
@@ -79,28 +85,13 @@ const iboConfig = {
 }
 
 const config = {
-  dataset: dataset,
-  axes: {
-    y: {
-      lineWidth: 2,
-      strokeStyle: "#ccc",
-      dash: [6, 6],
-      offset: 40,
-      labels: {
-        fillStyle: "pink",
-        font: "18px sans-serif",
-        textAlign: "center",
-        textBaseline: "middle",
-      },
-    },
-    x: {
-      offset: 40,
-      strokeStyle: "lightgrey",
-    },
-  },
+  dataset: [{
+    color: ["#C2D6FF", "#314B99"],
+    data: { 'Выставка': 15, "Индивидуальная консультация": 10 },
+  }],
 };
 
-canvas!.options = iboConfig;
+canvas!.options = config;
 
 let line = document.querySelector("#line") as any;
 line!.options = config;
@@ -113,9 +104,8 @@ const bibilostatConfig = {
   borderRadius: 8,
   dataLabels: {
     display: true,
-    textBaseline: 'middle',
-    textAlign: 'start',
-    fillStyle: 'white'
+    fillStyle: 'white',
+    position: 'start top'
   },
   axes: {
     y: {
@@ -125,7 +115,8 @@ const bibilostatConfig = {
       labels: {
         fillStyle: "#16191D",
         font: "14px sans-serif",
-        textBaseline: 'middle'
+        textBaseline: 'middle',
+        textAlign: "start"
       },
     },
     x: {

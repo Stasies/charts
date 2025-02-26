@@ -22,9 +22,9 @@ export class HorizontalChart extends Chart {
   }
   setCoords() {
     this.keys.forEach((key) => {
-      this.offsetX = Math.max(this.ctx.measureText(String(key)).width + 10, this.offsetX)
+      this.offsetX = Math.max(this.ctx.measureText(String(key)).width + this.paddingRight, this.offsetX)
     })
-    this.width = this.ctx.canvas.width - this.offsetX
+    this.width = this.ctx.canvas.width - this.offsetX - this.paddingRight
 
     this.stepX = this.width / this.numberOfSteps;
     this.stepY = this.height / this.keys.length;
@@ -65,27 +65,26 @@ export class HorizontalChart extends Chart {
   }
   positionDataLabels(x0: number, x1: number, y1: number, text: string) {
     if (!this.dataLabels.display) return
-    for (let property in this.dataLabels) {
-      (this.ctx as any)[property] = this.dataLabels[property]
-    }
-    // let labelPositionX = x1
-    // if (this.ctx.textAlign == 'center') {
-    //   labelPositionX = x1 - (x1 - x0) / 2
-    // } else if (this.ctx.textAlign == 'start') {
-    //   labelPositionX = x0
-    // } else if (this.ctx.textAlign == 'end') {
-    //   labelPositionX = x1
+    // for (let property in this.dataLabels) {
+    //   (this.ctx as any)[property] = this.dataLabels[property]
     // }
+    let labelPositionX = x1
+    if (this.ctx.textAlign == 'center') {
+      labelPositionX = x1 - (x1 - x0) / 2
+    } else if (this.ctx.textAlign == 'start') {
+      labelPositionX = x0
+    } else if (this.ctx.textAlign == 'end') {
+      labelPositionX = x1
+    }
 
     let labelPositionY = y1
-    // if (this.ctx.textBaseline == 'middle') {
-    //   labelPositionY += this.clientBarWidth * 0.5
-    // } else if (this.ctx.textBaseline == 'top') {
-    //   labelPositionY -= this.clientBarWidth
-    // } else if (this.ctx.textBaseline == 'bottom') {
-    //   labelPositionY += this.clientBarWidth * 2.5
-    // }
-
+    if (this.ctx.textBaseline == 'middle') {
+      labelPositionY += this.clientBarWidth * 0.5
+    } else if (this.ctx.textBaseline == 'top') {
+      labelPositionY -= this.clientBarWidth
+    } else if (this.ctx.textBaseline == 'bottom') {
+      labelPositionY += this.clientBarWidth * 2.5
+    }
     this.ctx.fillText(text, x1, y1);
   }
 }

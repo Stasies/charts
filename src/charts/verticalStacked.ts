@@ -63,7 +63,7 @@ class VerticalStackedChart extends VerticalChart {
           radius = this.borderRadius
         }
 
-        this.drawRoundedLine(x0, y0, barWidth, -dataHeight, [0, 0, radius, radius], bar.color)
+        this.drawRoundedLine(x0 - barWidth / 2, y0, barWidth, -dataHeight, [0, 0, radius, radius], bar.color)
         this.ctx.fillText(String(bar.value), x + 20, y1);
       });
     });

@@ -63,7 +63,6 @@ class HorizontalStackedChart extends HorizontalChart {
           radius = this.borderRadius
         }
 
-        this.drawLine(x0, y0, x1, y1, bar.color);
         this.drawRoundedLine(x0, y0 - this.clientBarWidth / 2, dataWidth, this.clientBarWidth, [0, radius, radius, 0], bar.color)
         this.positionDataLabels(x0, x1, y1, String(bar.value))
       });
