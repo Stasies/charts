@@ -7,7 +7,7 @@ export class VerticalChart extends Chart {
   originX: number = 0;
   originY: number = 0;
 
-  set options(options: any) {
+  set options(options: Config) {
     super.options = options;
     this.setCoords();
     this.drawLabels();
@@ -20,6 +20,16 @@ export class VerticalChart extends Chart {
       this.drawData(data, index);
     });
   }
+  getDataForTest() {
+    let data = super.getDataForTest()
+    return {
+      ...data,
+      stepX: this.stepX,
+      stepY: this.stepY,
+      originX: this.originX,
+      originY: this.originY,
+    }
+  }
 
   setCoords() {
     this.steps.forEach((step) => {
@@ -28,7 +38,7 @@ export class VerticalChart extends Chart {
     this.width = this.ctx.canvas.width - this.offsetX - this.paddingRight
 
     this.stepX = this.width / this.keys.length;
-    this.stepY = this.height / this.numberOfSteps;
+    this.stepY = (this.height - this.paddingTop) / this.numberOfSteps;
 
     const negativeSpace = this.negativeSteps * this.stepY;
     this.originX = this.offsetX;
@@ -63,38 +73,34 @@ export class VerticalChart extends Chart {
       let textPosition = dataHeight > 0 ? dataPosition - 5 : dataPosition + 12;
 
       this.drawRoundedLine(x, this.originY, dataWidth, -dataHeight, [0, 0, this.borderRadius, this.borderRadius], data.color)
-
       this.positionDataLabels(String(currentValue), x, textPosition, dataWidth, dataHeight)
       count++;
     }
   }
   positionDataLabels(text: string, x: number, y: number, width: number, height: number) {
-    if (!this.dataLabels || !this.dataLabels?.display) return
-    this.ctx.direction = 'rtl'
+    if (this.dataLabels?.display == false) return
+    if (this.dataLabels?.fillStyle) {
+      this.ctx.fillStyle = this.dataLabels?.fillStyle
+    }
     if (this.dataLabels.position?.match('start')) {
-      this.ctx.textAlign = 'start'
+      this.ctx.textAlign = 'end'
+      x -= width
     } else if (this.dataLabels.position?.match('center')) {
       this.ctx.textAlign = 'center'
-      x += width / 2
     } else if (this.dataLabels.position?.match('end')) {
-      this.ctx.textAlign = 'end'
+      this.ctx.textAlign = 'start'
       x += width
     }
     if (this.dataLabels.position?.match('top')) {
       this.ctx.textBaseline = 'top'
-      if (this.dataLabels.position.match('inside')) {
-        y += 10
-      } else {
-        y -= 10
-      }
+      y -= 10
     } else if (this.dataLabels.position?.match('middle')) {
-      this.ctx.textBaseline = 'top'
+      this.ctx.textBaseline = 'middle'
       y += height / 2
     } else if (this.dataLabels.position?.match('bottom')) {
       this.ctx.textBaseline = 'bottom'
       y += height
     }
-
     this.ctx.fillText(text, x, y);
   }
 }
@@ -103,10 +109,6 @@ declare global {
     "chart-vertical-bar": VerticalChart;
   }
 }
-const globalObject = typeof window !== 'undefined' ? window : global;
-globalObject.HTMLElement = window.HTMLElement;
-globalObject.HTMLDivElement = window.HTMLDivElement;
-globalObject.HTMLCanvasElement = window.HTMLCanvasElement;
 
 if (!customElements.get("chart-vertical-bar")) {
   customElements.define("chart-vertical-bar", VerticalChart)

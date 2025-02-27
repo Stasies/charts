@@ -15,6 +15,16 @@ export class HorizontalChart extends Chart {
     this.drawChartData(options.dataset);
     this.drawAxes();
   }
+  getDataForTest() {
+    let data = super.getDataForTest()
+    return {
+      ...data,
+      stepX: this.stepX,
+      stepY: this.stepY,
+      originX: this.originX,
+      originY: this.originY,
+    }
+  }
   drawChartData(dataset: DatasetItem[]) {
     dataset.forEach((data, index) => {
       this.drawData(data, index);
@@ -27,7 +37,7 @@ export class HorizontalChart extends Chart {
     this.width = this.ctx.canvas.width - this.offsetX - this.paddingRight
 
     this.stepX = this.width / this.numberOfSteps;
-    this.stepY = this.height / this.keys.length;
+    this.stepY = (this.height - this.paddingTop) / this.keys.length;
 
     const negativeSpace = this.negativeSteps ? this.negativeSteps * this.stepX : 0;
     this.originX = negativeSpace + this.offsetX;
@@ -40,7 +50,7 @@ export class HorizontalChart extends Chart {
     super.drawAxes(this.originX, this.originY);
   }
   drawLabels() {
-    super.drawLabels(this.stepY / 2, this.keys, this.stepY, "y");
+    super.drawLabels(this.paddingTop + this.stepY / 2, this.keys, this.stepY, "y");
     super.drawLabels(this.offsetX, this.steps, this.stepX, "x");
   }
 
@@ -50,7 +60,7 @@ export class HorizontalChart extends Chart {
     let count = 0;
 
     for (
-      let y = 0 + yOffset + barWidth / 2;
+      let y = this.paddingTop + yOffset + barWidth / 2;
       count < Object.keys(data.data).length;
       y += this.stepY
     ) {
@@ -58,36 +68,48 @@ export class HorizontalChart extends Chart {
       const dataWidth = (this.stepX / this.stepSize) * currentValue;
 
       this.drawRoundedLine(this.originX, y - this.clientBarWidth / 2, dataWidth, this.clientBarWidth, [0, this.borderRadius, this.borderRadius, 0], data.color)
-      this.positionDataLabels(this.originX, this.originX + dataWidth, y, String(currentValue))
+      this.positionDataLabels(String(currentValue), this.originX, y, dataWidth, this.clientBarWidth)
 
       count++;
     }
   }
-  positionDataLabels(x0: number, x1: number, y1: number, text: string) {
-    if (!this.dataLabels.display) return
-    // for (let property in this.dataLabels) {
-    //   (this.ctx as any)[property] = this.dataLabels[property]
-    // }
-    let labelPositionX = x1
-    if (this.ctx.textAlign == 'center') {
-      labelPositionX = x1 - (x1 - x0) / 2
-    } else if (this.ctx.textAlign == 'start') {
-      labelPositionX = x0
-    } else if (this.ctx.textAlign == 'end') {
-      labelPositionX = x1
+  positionDataLabels(text: string, x: number, y: number, width: number, height: number) {
+    if (this.dataLabels?.display == false) return
+    if (this.dataLabels?.fillStyle) {
+      this.ctx.fillStyle = this.dataLabels?.fillStyle
+    }
+    let labelPositionX = x
+    if (this.dataLabels.position?.match('center')) {
+      labelPositionX = x + width / 2
+    } else if (this.dataLabels.position?.match('start')) {
+      labelPositionX = x + 4
+      this.ctx.textAlign = 'start'
+    } else if (this.dataLabels.position?.match('end')) {
+      this.ctx.textAlign = 'end'
+      labelPositionX = x + width
     }
 
-    let labelPositionY = y1
-    if (this.ctx.textBaseline == 'middle') {
-      labelPositionY += this.clientBarWidth * 0.5
-    } else if (this.ctx.textBaseline == 'top') {
-      labelPositionY -= this.clientBarWidth
-    } else if (this.ctx.textBaseline == 'bottom') {
-      labelPositionY += this.clientBarWidth * 2.5
+    let labelPositionY = y
+    if (this.dataLabels.position?.match('middle')) {
+      labelPositionY -= height / 2
+      this.ctx.textBaseline = 'top'
+    } else if (this.dataLabels.position?.match('top')) {
+      labelPositionY -= height / 2
+      this.ctx.textBaseline = 'bottom'
+    } else if (this.dataLabels.position?.match('bottom')) {
+      labelPositionY += height
+      this.ctx.textBaseline = 'top'
     }
-    this.ctx.fillText(text, x1, y1);
+    this.ctx.fillText(text, labelPositionX, labelPositionY);
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "chart-horizontal-bar": HorizontalChart;
+  }
+}
+
 if (!customElements.get("chart-horizontal-bar")) {
   customElements.define("chart-horizontal-bar", HorizontalChart)
 }

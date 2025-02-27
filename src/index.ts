@@ -58,10 +58,8 @@ const bibliostat2: DatasetItem[] = [
 const iboConfig = {
   dataset: bibliostatIBO,
   barThickness: 6,
-  borderRadius: 4,
+  borderRadius: 6,
   dataLabels: {
-    display: true,
-    fillStyle: 'white',
     position: 'end top'
   },
   axes: {
@@ -91,21 +89,18 @@ const config = {
   }],
 };
 
-canvas!.options = config;
+canvas!.options = iboConfig;
 
 let line = document.querySelector("#line") as any;
 line!.options = config;
-
-
 
 const bibilostatConfig = {
   dataset: bibliostat,
   barThickness: 12,
   borderRadius: 8,
   dataLabels: {
-    display: true,
-    fillStyle: 'white',
-    position: 'start top'
+    fillStyle: 'black',
+    position: 'center top'
   },
   axes: {
     y: {
@@ -136,9 +131,7 @@ const bibilostatConfig2 = {
   barThickness: 10,
   borderRadius: 10,
   dataLabels: {
-    display: true,
-    textBaseline: 'middle',
-    textAlign: 'end',
+    position: 'end top',
     fillStyle: '#314B99'
   },
   axes: {

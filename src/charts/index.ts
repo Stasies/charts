@@ -10,7 +10,7 @@ export class Chart extends HTMLElement {
   protected offsetX: number = 20;
   protected offsetY: number = 40;
   protected paddingRight: number = 24
-  protected paddingTop: number = 24
+  protected paddingTop: number = 100
   protected width: number = 0;
   protected height: number = 0;
   protected stepSize: number = 0;
@@ -39,9 +39,30 @@ export class Chart extends HTMLElement {
       "2d"
     )!;
   }
+  getDataForTest() {
+    return {
+      data: this._data,
+      range: this.range,
+      offsetX: this.offsetX,
+      offsetY: this.offsetY,
+      paddingRight: this.paddingRight,
+      paddingTop: this.paddingTop,
+      width: this.width,
+      height: this.height,
+      stepSize: this.stepSize,
+      numberOfSteps: this.numberOfSteps,
+      negativeSteps: this.negativeSteps,
+      maxValue: this.maxValue,
+      minValue: this.minValue,
+      keys: this.keys,
+      steps: this.steps,
+      dataLabels: this.dataLabels,
+      axes: this.axes
+    }
+  }
   connectedCallback() {
     this.width = this.ctx?.canvas.width;
-    this.height = this.ctx?.canvas.height - this.offsetY;
+    this.height = this.ctx?.canvas.height - this.offsetY
   }
   static get observedAttributes() {
     return ["width", "height"];
@@ -93,7 +114,7 @@ export class Chart extends HTMLElement {
       ).toFixed() || 0;
     }
     this.steps = Array.from(
-      { length: this.numberOfSteps },
+      { length: this.numberOfSteps + 1 },
       (_, i) => -this.negativeSteps * this.stepSize + i * this.stepSize
     );
   }
@@ -114,7 +135,7 @@ export class Chart extends HTMLElement {
       this.ctx.setLineDash(this.axes?.y?.dash || []);
       for (let x = this.offsetX; x <= this.width + this.offsetX + this.paddingRight; x += stepX) {
         if (x !== originX) {
-          this.drawLine(x, this.height, x, 0);
+          this.drawLine(x, this.height, x, this.paddingTop);
         }
       }
       this.ctx.setLineDash([]);
@@ -125,14 +146,14 @@ export class Chart extends HTMLElement {
       this.ctx.strokeStyle = this.axes?.x?.strokeStyle || "#ccc";
       this.ctx.lineWidth = this.axes?.x?.lineWidth || 1;
       this.ctx.setLineDash(this.axes?.x?.dash || []);
-      for (let y = this.height; y >= 0; y -= stepY) {
+      for (let y = this.height; y >= this.paddingTop; y -= stepY) {
         if (Math.ceil(y) !== Math.ceil(originY)) {
           this.drawLine(this.offsetX, y, this.width + originX, y);
         }
       }
       this.ctx.setLineDash([]);
     } else {
-      this.drawLine(this.offsetX, 0, this.width + this.offsetX, 0);
+      this.drawLine(this.offsetX, this.paddingTop, this.width + this.offsetX, this.paddingTop);
     }
   }
   drawAxes(x: number, y: number) {
@@ -143,7 +164,7 @@ export class Chart extends HTMLElement {
     this.drawLine(this.offsetX, y, this.width + this.offsetX, y);
 
     // Y-axis
-    this.drawLine(x, this.height, x, 0);
+    this.drawLine(x, this.height, x, this.paddingTop);
   }
   drawLabels(
     position: number,
@@ -197,7 +218,7 @@ export class Chart extends HTMLElement {
     }
     this.ctx.beginPath();
     this.ctx.moveTo(x0, y0);
-    // this.ctx.roundRect(x0, y0, width, height, radius);
+    this.ctx.roundRect(x0, y0, width, height, radius);
     this.ctx.stroke();
     this.ctx.fill();
   }

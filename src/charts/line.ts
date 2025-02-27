@@ -36,7 +36,7 @@ class LineChart extends VerticalChart {
 
       //add data value
       this.ctx.fillStyle = data.color[0];
-      this.ctx.fillText(String(currentValue), x1, y1);
+      this.ctx.fillText(String(currentValue), x1 + 10, y1 - 10);
 
       y0 = y1;
       index++;
