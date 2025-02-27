@@ -20,8 +20,8 @@ export interface Axes {
 export interface Config {
   dataset: DatasetItem[];
   axes?: Axes;
-  barThickness: number,
-  borderRadius: number,
+  barThickness?: number,
+  borderRadius?: number,
   dataLabels?: {
     display?: boolean,
     fillStyle?: string,
