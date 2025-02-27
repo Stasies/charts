@@ -1,12 +1,12 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
-import "../charts/vertical";
-import { VerticalChart } from "../charts/vertical";
+import "../charts/horizontal";
+import { HorizontalChart } from "../charts/horizontal";
 
-let chart: VerticalChart = document.createElement('chart-vertical-bar')
+let chart: HorizontalChart = document.createElement('chart-horizontal-bar')
 let height = 600
 let width = 800
 
-describe("vertical-chart", async () => {
+describe("horizontal-chart", async () => {
   beforeAll(() => {
     chart.setAttribute('width', `${width}`)
     chart.setAttribute('height', `${height}`)
@@ -21,6 +21,7 @@ describe("vertical-chart", async () => {
       }]
     }
   })
+
   it("should render correctly", async () => {
     let canvas = chart.querySelector('canvas')
     let data = chart.getDataForTest()
@@ -29,6 +30,7 @@ describe("vertical-chart", async () => {
     expect(data.height).toEqual(height - data.offsetY)
     expect(data.width).toEqual(width - data.offsetX - data.paddingRight)
   });
+
   it('should calculate range correctly', () => {
     let data = chart.getDataForTest()
     expect(data.minValue).toEqual(0)
@@ -45,7 +47,7 @@ describe("vertical-chart", async () => {
     expect(data.stepSize).toEqual(2)
     expect(data.negativeSteps).toEqual(0)
 
-    expect(Math.round(data.stepY * (data.steps.length - 1))).toEqual(data.height - data.paddingTop)
-    expect(data.stepX).toEqual(data.width / 2)
+    expect(data.stepY).toEqual((data.height - data.paddingTop) / 2)
+    expect(Math.round(data.stepX * (data.steps.length - 1))).toEqual(data.width)
   })
 });
